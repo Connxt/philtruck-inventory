@@ -41,7 +41,7 @@ class Customers extends CI_Controller {
 			$this->input->post('contactInfo')
 		);
 
-		echo json_encode($this->customer_model->get_customer($this->db->insert_id()));
+		echo json_encode($this->_get_customer($this->db->insert_id()));
 	}
 
 	public function update_customer() {
@@ -57,7 +57,7 @@ class Customers extends CI_Controller {
 				$this->input->post('contactInfo')
 			);
 
-			echo json_encode($this->customer_model->get_customer($customer_id));
+			echo json_encode($this->_get_customer($customer_id));
 		}
 		else {
 			echo 0;
@@ -88,6 +88,40 @@ class Customers extends CI_Controller {
 			echo 0;
 	}
 
+	private function _get_customer($customer_id) {
+		$customer = $this->customer_model->get_customer($customer_id);
+
+		if($customer->balance <= 0) {
+			$customer->days_left = 0;
+			return $customer;
+		}
+		else {
+			$max_days_left = 0;
+			$receipts = $this->receipt_model->get_receipts_via_customer_id($customer->id);
+
+			foreach($receipts as $receipt) {
+				if($receipt->balance > 0) {
+					if($receipt->days_left > $max_days_left) {
+						$max_days_left = $receipt->days_left;
+					}
+				}
+			}
+
+			$min_days_left = $max_days_left;
+
+			foreach($receipts as $receipt) {
+				if($receipt->balance > 0) {
+					if($receipt->days_left < $min_days_left) {
+						$min_days_left = $receipt->days_left;
+					}
+				}
+			}
+
+			$customer->days_left = $min_days_left;
+			return $customer;
+		}
+	}
+
 	public function get_customer() {
 		$customer = $this->customer_model->get_customer($this->input->post('customerId'));
 
@@ -100,12 +134,24 @@ class Customers extends CI_Controller {
 			$receipts = $this->receipt_model->get_receipts_via_customer_id($customer->id);
 
 			foreach($receipts as $receipt) {
-				if($receipt->days_left > $max_days_left) {
-					$max_days_left = $receipt->days_left;
+				if($receipt->balance > 0) {
+					if($receipt->days_left > $max_days_left) {
+						$max_days_left = $receipt->days_left;
+					}
 				}
 			}
 
-			$customer->days_left = $max_days_left;
+			$min_days_left = $max_days_left;
+
+			foreach($receipts as $receipt) {
+				if($receipt->balance > 0) {
+					if($receipt->days_left < $min_days_left) {
+						$min_days_left = $receipt->days_left;
+					}
+				}
+			}
+
+			$customer->days_left = $min_days_left;
 			echo json_encode($customer);
 		}
 	}
@@ -124,12 +170,23 @@ class Customers extends CI_Controller {
 				$receipts = $this->receipt_model->get_receipts_via_customer_id($customer->id);
 
 				foreach($receipts as $receipt) {
-					if($receipt->days_left > $max_days_left) {
-						$max_days_left = $receipt->days_left;
+					if($receipt->balance > 0) {
+						if($receipt->days_left > $max_days_left) {
+							$max_days_left = $receipt->days_left;
+						}
 					}
 				}
 
-				$customer->days_left = $max_days_left;
+				$min_days_left = $max_days_left;
+				foreach($receipts as $receipt) {
+					if($receipt->balance > 0) {
+						if($receipt->days_left < $min_days_left) {
+							$min_days_left = $receipt->days_left;
+						}
+					}
+				}
+
+				$customer->days_left = $min_days_left;
 				array_push($customers, $customer);
 			}
 		}

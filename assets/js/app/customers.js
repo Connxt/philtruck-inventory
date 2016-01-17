@@ -354,7 +354,7 @@ var Customers = (function () {
 						}
 						else {
 							var customer = JSON.parse(data);
-
+							
 							$subDtCustomers.fnUpdate([
 								customer.id,
 								customer.last_name + ", " + customer.first_name + " " + customer.middle_name.substring(0, 1) + ".",
