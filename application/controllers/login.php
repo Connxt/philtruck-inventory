@@ -16,7 +16,7 @@ class Login extends CI_Controller {
 
 		if($this->session->userdata('samson_auth')) {
 			if($session_data['user_level'] == 'Administrator')
-				redirect('items', 'refresh');
+				redirect('cashiering', 'refresh');
 			else
 				redirect('cashiering', 'refresh');
 		}

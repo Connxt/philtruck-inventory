@@ -36,7 +36,7 @@
 		                        <button id="btn_delete_supplier" type="button" class="btn btn-danger disabled"><span class="fa fa-trash-o"></span></button>
                                 <button id="btn_view_supplier" type="button" class="btn btn-info disabled"><span class="glyphicon glyphicon-eye-open"></span></button>
 		                        <button id="btn_update_supplier" type="button" class="btn btn-primary disabled"><span class="fa fa-pencil"></span></button>
-		                        <button id="btn_receive_delivery" type="button" class="btn btn-warning disabled"><span class="glyphicon glyphicon-save"></span></button>
+		                        <button id="btn_receive_delivery" type="button" class="btn btn-warning disabled"><i class="fa fa-database"></i></button>
 		                        <button id="btn_refresh_supplier_list" type="button" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span></button>
 		                        <button id="btn_new_supplier" type="button" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> New Supplier</button>
 	                        </div>
